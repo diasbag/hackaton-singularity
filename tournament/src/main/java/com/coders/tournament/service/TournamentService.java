@@ -48,7 +48,7 @@ public class TournamentService {
         }
         return tournamentRepository.findById(id)
                 .map(tournament -> {
-                    tournament.setOnHold(false);
+                    tournament.setStatus(1);
                     List<Participant> participants = tournament.getParticipants();
                     generateMatch(tournament);
                     tournament.setParticipants(participants);
@@ -102,7 +102,7 @@ public class TournamentService {
 
         return tournamentRepository.findById(id)
                 .map(tournament -> {
-                    tournament.setOnHold(true);
+                    tournament.setStatus(2);
 
                     return "Tournament is now on hold!";
                 }).orElseThrow(() -> new TournamentException(Utils.tournamentNotFoundMessage(id)));
@@ -116,7 +116,7 @@ public class TournamentService {
         return tournamentRepository.findById(id)
                 .map(tournament -> {
                     tournament.setMaxParticipants(tournamentUpdated.getMaxParticipants());
-                    tournament.setOnHold(tournamentUpdated.isOnHold());
+                    tournament.setStatus(0);
                     tournament.setParticipants(tournamentUpdated.getParticipants());
 
                     return tournamentRepository.save(tournament);

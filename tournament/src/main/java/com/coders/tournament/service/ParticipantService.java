@@ -77,7 +77,7 @@ public class ParticipantService {
 
         Tournament tournament = tournamentOptional.get();
 
-        if (!tournament.isOnHold()) {
+        if (tournament.getStatus() == 1) {
             return "Can't delete participant, because tournament is not on hold!";
         }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 //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
 @Data
@@ -18,7 +19,7 @@ public class Tournament {
 
     private String name;
     @JsonIgnore
-    private boolean onHold = true;
+    private int status = 0;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -28,6 +29,10 @@ public class Tournament {
     )
     private List<Participant> participants;
 
+    private LocalDateTime starTime;
+
+    @OneToMany
+    private List<User> users;
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "tournament")
     private List<Match> matches;
@@ -49,12 +54,12 @@ public class Tournament {
     }
 
 
-    public boolean isOnHold() {
-        return onHold;
+    public int getStatus() {
+        return status;
     }
 
-    public void setOnHold(boolean onHold) {
-        this.onHold = onHold;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public List<Participant> getParticipants() {
@@ -67,6 +72,14 @@ public class Tournament {
 
     public List<Match> getMatches() {
         return matches;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public void setMatches(List<Match> matches) {
