@@ -5,7 +5,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 //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
 @Data
 @Entity
@@ -15,19 +18,25 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer maxParticipants;
+   // private Integer maxParticipants;
 
+    @Column(name = "name")
     private String name;
-    @JsonIgnore
-    private int status = 0;
+   // @JsonIgnore
+    private int statusId = 1;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private int tournamentTypeId;
+
+    private int userId;
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Participant.class)
     @JoinTable (
             name = "tournament_participant"
 
     )
     private List<Participant> participants;
+
 
     private LocalDateTime starTime;
 
@@ -45,21 +54,21 @@ public class Tournament {
         this.id = id;
     }
 
-    public Integer getMaxParticipants() {
-        return maxParticipants;
+//    public Integer getMaxParticipants() {
+//        return maxParticipants;
+//    }
+//
+//    public void setMaxParticipants(Integer maxParticipants) {
+//        this.maxParticipants = maxParticipants;
+//    }
+
+
+    public int getStatusId() {
+        return statusId;
     }
 
-    public void setMaxParticipants(Integer maxParticipants) {
-        this.maxParticipants = maxParticipants;
-    }
-
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+    public void setStatusId(int status) {
+        this.statusId = status;
     }
 
     public List<Participant> getParticipants() {

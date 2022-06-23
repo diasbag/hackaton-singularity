@@ -1,11 +1,16 @@
 package com.coders.tournament.controllers;
 
 import com.coders.tournament.exception.TournamentException;
+import com.coders.tournament.model.Participant;
 import com.coders.tournament.model.Tournament;
+import com.coders.tournament.model.TournamentResponse;
+import com.coders.tournament.service.ParticipantService;
 import com.coders.tournament.service.TournamentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static java.lang.System.in;
 
 /**
  * @author Muhammadjon Hakimov (github.com/MrHakimov)
@@ -17,8 +22,10 @@ import java.util.List;
 public class TournamentController {
     private final TournamentService tournamentService;
 
-    public TournamentController(TournamentService tournamentService) {
+    private ParticipantService participantService;
+    public TournamentController(TournamentService tournamentService ,  ParticipantService participantService) {
         this.tournamentService = tournamentService;
+        this.participantService = participantService;
     }
 
     /**
@@ -26,9 +33,11 @@ public class TournamentController {
      *
      * @return all available tournaments.
      */
-    @GetMapping("/tournaments")
-    public List<Tournament> get() {
-        return tournamentService.findAllTournaments();
+    @RequestMapping(value = "/tournaments/get/{userId}", method = RequestMethod.GET)
+    public TournamentResponse get(@PathVariable int userId) {
+        TournamentResponse response = new TournamentResponse();
+        response.tournaments = tournamentService.findAllTournaments();
+        return response;
     }
 
     /**
@@ -51,8 +60,17 @@ public class TournamentController {
      * @throws TournamentException if maxParticipants is not provided or is not multiple of 8.
      */
     @PostMapping("/tournaments")
-    public Tournament create(@RequestBody Tournament tournament)  throws TournamentException {
-        return tournamentService.createTournament(tournament);
+    public Tournament create(@RequestBody Tournament tournament) {
+
+        List<Participant> list = tournament.getParticipants();
+        tournament.setParticipants(null);
+        Tournament result = tournamentService.createTournament(tournament);
+
+        for (Participant t: list
+             ) {
+            participantService.addParticipant(result.getId(), t);
+        }
+        return result;
     }
 
     /**

@@ -35,9 +35,9 @@ public class TournamentService {
     }
 
     public Tournament createTournament(Tournament tournament) {
-        if (tournament.getMaxParticipants() == null || tournament.getMaxParticipants() % 8 != 0) {
-            throw new TournamentException("Max number of participants should be multiple of 8!");
-        }
+//        if (tournament.getMaxParticipants() == null || tournament.getMaxParticipants() % 8 != 0) {
+//            throw new TournamentException("Max number of participants should be multiple of 8!");
+//        }
 
         return tournamentRepository.save(tournament);
     }
@@ -48,7 +48,7 @@ public class TournamentService {
         }
         return tournamentRepository.findById(id)
                 .map(tournament -> {
-                    tournament.setStatus(1);
+                    tournament.setStatusId(2);
                     List<Participant> participants = tournament.getParticipants();
                     generateMatch(tournament);
                     tournament.setParticipants(participants);
@@ -102,7 +102,7 @@ public class TournamentService {
 
         return tournamentRepository.findById(id)
                 .map(tournament -> {
-                    tournament.setStatus(2);
+                    tournament.setStatusId(2);
 
                     return "Tournament is now on hold!";
                 }).orElseThrow(() -> new TournamentException(Utils.tournamentNotFoundMessage(id)));
@@ -115,8 +115,8 @@ public class TournamentService {
 
         return tournamentRepository.findById(id)
                 .map(tournament -> {
-                    tournament.setMaxParticipants(tournamentUpdated.getMaxParticipants());
-                    tournament.setStatus(0);
+//                    tournament.setMaxParticipants(tournamentUpdated.getMaxParticipants());
+                    tournament.setStatusId(0);
                     tournament.setParticipants(tournamentUpdated.getParticipants());
 
                     return tournamentRepository.save(tournament);

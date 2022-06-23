@@ -33,16 +33,16 @@ public class ParticipantService {
     public Participant addParticipant(Long tournamentId, Participant participant) {
         return tournamentRepository.findById(tournamentId)
                 .map(tournament -> {
-                    if (tournament.getParticipants().size() < tournament.getMaxParticipants()) {
-                        participant.setActive(true);
-                        participant.setMatch(new Match());
-                        participant.setTournament(tournament);
+//                    if (tournament.getParticipants().size() < tournament.getMaxParticipants()) {
+//
+//                    }
 
-                        return participantRepository.save(participant);
-                    }
+                    participant.setActive(true);
+                    participant.setMatch(new Match());
+                    participant.setTournament(tournament);
 
+                    return participantRepository.save(participant);
                     // TODO - size limit exceeded message
-                    return null;
                 }).orElseThrow(() -> new TournamentException(Utils.tournamentNotFoundMessage(tournamentId)));
     }
 
@@ -77,7 +77,7 @@ public class ParticipantService {
 
         Tournament tournament = tournamentOptional.get();
 
-        if (tournament.getStatus() == 1) {
+        if (tournament.getStatusId() == 1) {
             return "Can't delete participant, because tournament is not on hold!";
         }
 
